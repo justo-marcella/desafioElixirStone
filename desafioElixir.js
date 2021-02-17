@@ -1,30 +1,104 @@
-// function soma itens (recebeListaItens, recebeListaNomes){
-//     soma dos valores; multiplica o preço de cada item por sua quantidade e soma todos os itens;
-//     divide os valores de forma igual pelos emails; -> Divisão não pode ter dízima ->Não trabalhar com valores decimais
-//     Retorna um mapa/dicionário onde a chave será o e-mail e o valor será quanto ele deve pagar nessa conta;
-// }
-// documentar teste da solução
-
 function pagamentosPorEmail (listaItens, listaEmails){
+    //Verificando a existência de valores indefinidos ou listas vazias
+    if((typeof Object.values(listaItens) === undefined || Object.values(listaItens).length === 0) || (typeof Object.values(listaEmails) === undefined || Object.values(listaEmails).length === 0)){
+        console.log('Execução impossível ou com erros. Há valores inexistentes ou indefinidos nas listas, verifique.') 
+    } else{    
     
-    let listaItens = {
-        item:'Maçã',
-        quantidade: 10, 
-        preco: 130
-    };
-    let listaEmails = [];
-    let arrayPrecos =[];
+    let totalPrecos =[];
+    const itens = Object.values(listaItens);
+    // console.log(itens)
+    
+    //multiplicando quantidade de itens pelo preço para verificação de total
+    for(i in itens){
+        totalPrecos.push(itens[i].quantidade * itens[i].preco); 
+        } 
+        // console.log(totalPrecos);
 
-        for(let i = 0; i <= listaItens.length; i++){
-            listaItens[i].quantidade > 0 ? arrayPrecos.push(listaItens[i].quantidade * listaItens[i].preco) : console.log('Não há itens para verificação.')
-        } //multiplicando quantidade de itens pelo preço para verificação de total
-        console.log(arrayPrecos);
+    //Soma total de valores de itens da lista
+    let somaTotal = totalPrecos.reduce((acc, curr)=> acc + curr); 
+    console.log(somaTotal)
 
-        let somaTotal = arrayPrecos.reduce(reducer); //Soma total de valores de itens da lista
+    //divisão que resulta dízima arredondada
+    let valorPorEmail = Math.floor(somaTotal / listaEmails.length);
 
-        let valorPorEmail = listaEmails.map()
+    //divisão para verificar valor faltante
+    let sobraParaUltimo = somaTotal - valorPorEmail * (listaEmails.length -1);
 
-        return valorPorEmail;
 
+    //criacao do mapa para distribuicao dos valores de pagamento por email
+    const map = new Map();
+    
+    for (let i = 0; i<listaEmails.length -1; i++ ){
+        map.set(listaEmails[i], valorPorEmail);
+    }
+    map.set(listaEmails[listaEmails.length -1], sobraParaUltimo); 
 
+    return console.log(map);
+
+    }
 }
+
+// TESTES
+
+//teste INTEIRO 
+pagamentosPorEmail([
+    {
+         "item": "lápis",    
+         "quantidade": 100,
+         "preco": 90
+     },
+     { 
+         "item": "borracha",
+         "quantidade": 87,
+         "preco": 75
+     }, 
+     {
+        "item": 'apontador',
+        "quantidade": 50,
+        "preco": 120
+    },
+    
+     ], ['email1@email','email2@email','email3@email','email4@email','email5@email', 'email6@email']);
+
+//teste DÍZIMA
+
+pagamentosPorEmail([
+    {
+         "item": "lápis",    
+         "quantidade": 100,
+         "preco": 90
+     },
+     { 
+         "item": "borracha",
+         "quantidade": 85,
+         "preco": 75
+     }, 
+     {
+        "item": 'apontador',
+        "quantidade": 50,
+        "preco": 125
+    },
+    
+     ], ['email1@email','email2@email','email3@email','email4@email','email5@email', 'email6@email']);
+
+//teste LISTA ITENS VAZIA
+
+pagamentosPorEmail(
+    [], ['email1@email','email2@email','email3@email','email4@email','email5@email', 'email6@email']);
+
+//teste LISTA EMAILS VAZIA
+
+pagamentosPorEmail(
+    [ { 
+        "item": "borracha",
+        "quantidade": 85,
+        "preco": 75
+    }, 
+    {
+       "item": 'apontador',
+       "quantidade": 50,
+       "preco": 125
+   },], []);
+
+   //teste valores indefinidos
+   
